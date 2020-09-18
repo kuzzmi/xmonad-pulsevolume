@@ -5,8 +5,8 @@ import sys
 import time
 import os
 
-allbars =   "[//////////]"
-emptybars = "[          ]"
+allbars =   "[--------]"
+emptybars = "[        ]"
 
 home = os.getenv("HOME")
 
@@ -17,20 +17,19 @@ with open(home + "/.mute") as f:
   isunmuted = (int(f.readlines()[0]) == 0)
 
 if isunmuted:
+  maxvol = 65536
   volume = int(content[0])
-  bars = int(volume / 9000)
+  maxbars = 8
+  step = int(maxvol / maxbars)
+  bars = int(volume / step)
 
-  if (volume % 9000 == 0):
-    output = allbars[0:bars+1] + emptybars[bars+1:]
-  if (volume % 9000 == 3000):
-    output = allbars[0:bars+1] + "." + emptybars[bars+2:]
-  if (volume % 9000 == 6000):
-    output = allbars[0:bars+1] + "-" + emptybars[bars+2:]
+  # print(volume, step, bars)
+
+  output = allbars[0:bars] + '|' + emptybars[bars+1:]
+  if (volume == 0):
+    output = "[        ]"
 else:
-  output = "[  (mute)  ]"
-
+  output = "[  mute  ]"
 
 print(output)
 sys.stdout.flush
-  
-
